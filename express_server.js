@@ -55,7 +55,10 @@ app.get("/u/:shortURL", (req, res) => {
     res.redirect("/urls");
   })
   app.post("/urls/:shortURL/edit", (req, res) => {
-    console.log(res);
-    urlDatabase[req.params.shortURL] = res.params ;
+   // console.log(res);
+   // console.log(req)
+    urlDatabase[req.params.shortURL] = req.body.longURL
+    console.log(req.body.longURL)
+    //urlDatabase[req.params.shortURL] = res.params ;
     res.redirect("/urls");
   })
