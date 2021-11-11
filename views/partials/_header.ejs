@@ -10,7 +10,7 @@
 
       <% if(username){ %>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <ul class="navbar-nav me-auto">
             <li class="nav-item">
               <a class="nav-link active" aria-current="page" href="/urls">My URLs</a>
             </li>
@@ -18,14 +18,14 @@
               <a class="nav-link" href="/urls/new">Create new URL</a>
             </li>
           </ul>
-          <form class="d-flex" action="/logout" method="post">
-            <strong><%= username %></strong>
+          <form class="d-flex align-items-center" action="/logout" method="post">
+            <strong class="me-3 text-light"><%= username %></strong>
             <button class="btn btn-danger" type="submit">Logout</button>
           </form>
         </div>  
       <% } else{ %>  
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <ul class="navbar-nav me-auto">
             <li class="nav-item">
               <a class="nav-link active" aria-current="page" href="/register">Register</a>
             </li>

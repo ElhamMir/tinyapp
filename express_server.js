@@ -1,9 +1,10 @@
-
 const express = require("express");
+const cookieParser = require('cookie-parser')
 const app = express();
 const PORT = 8080; // default port 8080
 
 app.use(express.urlencoded({extended: true}));
+app.use(cookieParser())
 app.set("view engine", "ejs")
 
 const urlDatabase = {
@@ -24,9 +25,10 @@ app.get("/hello", (req, res) => {
 });
 
 app.get("/urls", (req, res) => {
-  const username = req.cookies.username;
+  console.log(req.cookies)
+  const username = req.cookies["username"];
   if(!username) {
-    res.redirect("/login");
+    return res.status(400).send("you are not logged in");
   }
   const templateVars = { 
     urls: urlDatabase ,
@@ -36,7 +38,14 @@ app.get("/urls", (req, res) => {
 });
 
 app.get("/urls/new", (req, res) => {
-  res.render("urls_new");
+  const username = req.cookies["username"];
+  if(!username) {
+    return res.redirect("/login");
+  }
+  const templateVars = { 
+    username
+  };
+  res.render("urls_new",templateVars);
 });
 
 app.get("/urls/:shortURL", (req, res) => {
@@ -80,10 +89,10 @@ app.post("/urls/:shortURL/edit", (req, res) => {
 })
 
 app.get("/login", (req, res) => {
-  //const username = req.cookies["username"];
- // if(req.cookies["username"]) {
- //   res.redirect("/urls");
-  //}
+  const username = req.cookies["username"];
+  if(username) {
+    return res.redirect("/urls");
+  }
   const templateVars = {
     username: null
   }
@@ -96,6 +105,11 @@ app.post("/login", (req, res) => {
   res.cookie('username',req.body.email)
   console.log(req.body)
   res.redirect("/urls");
+})
+
+app.post("/logout", (req, res) => {
+  res.clearCookie('username')
+  res.redirect("/login");
 })
 
 function generateRandomString() {
