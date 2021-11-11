@@ -1,23 +1,43 @@
 <header>
-    <nav class="navbar navbar-expand-md navbar-dark bg-success">
-      <a class="navbar-brand" href="/urls">TinyApp</a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+  <nav class="navbar navbar-expand-md navbar-dark bg-success">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/urls">Tiny App</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-        <div class="navbar-nav">
-          <a class="nav-item nav-link" href="/urls">My URLs</a>
-          <a class="nav-item nav-link" href="/urls/new">Create New URL</a>
-          <form class="form-inline" action="/login" method="post">
-            <div class="form-group mb-2">
-              <label for="login"></label>
-              <input class="form-control" type="text" name="login" placeholder="Username" style="width: 300px">
-              <button type="submit" class="btn btn-primary">login</button>
-            </div>
+
+
+
+      <% if(username){ %>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="/urls">My URLs</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/urls/new">Create new URL</a>
+            </li>
+          </ul>
+          <form class="d-flex" action="/logout" method="post">
+            <strong><%= username %></strong>
+            <button class="btn btn-danger" type="submit">Logout</button>
           </form>
-          
+        </div>  
+      <% } else{ %>  
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="/register">Register</a>
+            </li>
+          </ul>
+          <form class="d-flex" action="/login" method="post">
+            <input name="email" class="form-control me-2" type="email" placeholder="Email" aria-label="Email">
+            <input name="password" class="form-control me-2" type="password" placeholder="Password" aria-label="Password">
+            <button class="btn btn-primary" type="submit">Login</button>
+          </form>
         </div>
-      </div>
-    </nav>
-  </header>
+     <% } %>  
+    </div>
+  </nav>
+</header>
   
