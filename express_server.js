@@ -62,3 +62,13 @@ app.get("/u/:shortURL", (req, res) => {
     //urlDatabase[req.params.shortURL] = res.params ;
     res.redirect("/urls");
   })
+  app.get("/login", (req, res) => {
+   res.render("login")
+   })
+  app.post("/login", (req, res) => {
+    const save = req.body.login
+    res.cookie('username',req.body.login)
+   
+     console.log(req.body)
+     res.redirect("/urls");
+   })
