@@ -143,7 +143,7 @@ app.post("/register", (req, res) => {
   if(!userEmail || !userPass){
     res.send("Email or password is missing.")
   }
- if(emailAvailable(userEmail) === false){
+ if(!newEmail(userEmail)){
     res.send("A user with this email already exists.")
   }
   const userId = generateRandomString();
@@ -166,16 +166,11 @@ function generateRandomString() {
 }
 
 //checks if the email address is already used
-function emailAvailable(email) {
-  for (i in users) {
-    console.log("this i s i",i)
-    if (i["email"] === email) {
-      console.log("here")
-      return false;
-    }
-    return true;
-    console.log("here")
-  }
+function newEmail(email) {
+  let a = Object.values(users).find((obj) => {
+    return obj.val == email
+  });
+  return false;
 }
 
 app.listen(PORT, () => {
