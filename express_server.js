@@ -116,6 +116,8 @@ app.get("/login", (req, res) => {
 })
 
 app.post("/login", (req, res) => {
+  const userEmail = req.body.email; 
+  if (userEmail)
   //const username = req.body.login
   res.cookie('user',req.body.email)
   console.log(req.body)
@@ -166,10 +168,13 @@ function generateRandomString() {
 //checks if the email address is already used
 function emailAvailable(email) {
   for (i in users) {
+    console.log("this i s i",i)
     if (i["email"] === email) {
+      console.log("here")
       return false;
     }
     return true;
+    console.log("here")
   }
 }
 
