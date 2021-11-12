@@ -1,12 +1,13 @@
 const express = require("express");
 const cookieParser = require('cookie-parser')
+
 const app = express();
 const PORT = 8080; // default port 8080
 
 app.use(express.urlencoded({extended: true}));
 app.use(cookieParser())
 app.set("view engine", "ejs")
-
+const bcrypt = require('bcrypt');
 const urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
@@ -125,11 +126,13 @@ app.post("/login", (req, res) => {
   if(!user || user.password !== password) {
     return res.status(401).send("Invalid Username or Password");
   }
-
+  else if (user && bcrypt.compareSync(password,user.password)){
+    res.cookie('user_id',user.id)
+    console.log(req.body)
+    res.redirect("/urls");
+  }
   //const username = req.body.login
-  res.cookie('user_id',user.id)
-  console.log(req.body)
-  res.redirect("/urls");
+ 
 })
 
 app.post("/logout", (req, res) => {
@@ -158,7 +161,7 @@ app.post("/register", (req, res) => {
   const newUser = {
     id:userId,
     email: userEmail,
-    password: userPass
+    password: bcrypt.hashSync(userPass,10)
     
   }
   users[userId] = newUser;
