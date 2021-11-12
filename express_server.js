@@ -123,7 +123,7 @@ app.post("/login", (req, res) => {
   //const username = req.cookies["user"];
 
   if(!user || user.password !== password) {
-    return res.status(401).send("invalid");
+    return res.status(401).send("Invalid Username or Password");
   }
 
   //const username = req.body.login
