@@ -141,10 +141,10 @@ app.post("/register", (req, res) => {
   const userPass = req.body.password;
 
   if(!userEmail || !userPass){
-    res.send("Email or password is missing.")
+    return res.send("Email or password is missing.")
   }
- if(!newEmail(userEmail)){
-    res.send("A user with this email already exists.")
+ if(newEmail(userEmail)){
+    return res.status(401).send("A user with this email already exists.")
   }
   const userId = generateRandomString();
   const newUser = {
@@ -167,10 +167,14 @@ function generateRandomString() {
 
 //checks if the email address is already used
 function newEmail(email) {
-  let a = Object.values(users).find((obj) => {
-    return obj.val == email
-  });
-  return false;
+  const a = Object.values(users);
+
+  for(const user of a) {
+    if(user.email === email) {
+      return user;
+    }
+  }
+  return null;
 }
 
 app.listen(PORT, () => {
