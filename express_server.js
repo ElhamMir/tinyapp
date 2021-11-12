@@ -116,10 +116,18 @@ app.get("/login", (req, res) => {
 })
 
 app.post("/login", (req, res) => {
-  const userEmail = req.body.email; 
-  if (userEmail)
+  //const userEmail = req.body.email; 
+  const email = req.body.email;
+  const password = req.body.password;
+  const user = newEmail(email)
+  //const username = req.cookies["user"];
+
+  if(!user || user.password !== password) {
+    return res.status(401).send("invalid");
+  }
+
   //const username = req.body.login
-  res.cookie('user',req.body.email)
+  res.cookie('user_id',user.id)
   console.log(req.body)
   res.redirect("/urls");
 })
