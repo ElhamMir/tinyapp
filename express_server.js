@@ -40,7 +40,7 @@ app.get("/hello", (req, res) => {
 
 app.get("/urls", (req, res) => {
   console.log(req.cookies)
-  const username = req.cookies["user"];
+  const username = req.cookies.email;
   const email = users["username"]
   
   const templateVars = { 
@@ -141,18 +141,20 @@ app.post("/register", (req, res) => {
   if(!userEmail || !userPass){
     res.send("Email or password is missing.")
   }
- // if(!emailAvailable(userEmail)){
-  ////  res.send("A user with this email already exists.")
-  //}
+ if(emailAvailable(userEmail) === false){
+    res.send("A user with this email already exists.")
+  }
   const userId = generateRandomString();
-  users[userId] = {
+  const newUser = {
     id:userId,
     email: userEmail,
     password: userPass
     
   }
+  users[userId] = newUser;
   //const username = req.body.login
   res.cookie('user_id',userId)
+  res.cookie("email",userEmail)
   console.log(users)
   res.redirect("/urls");
 })
@@ -164,7 +166,7 @@ function generateRandomString() {
 //checks if the email address is already used
 function emailAvailable(email) {
   for (i in users) {
-    if (i[email] === email) {
+    if (i["email"] === email) {
       return false;
     }
     return true;
