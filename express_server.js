@@ -112,6 +112,13 @@ app.post("/logout", (req, res) => {
   res.redirect("/login");
 })
 
+app.get("/register", (req, res) => {
+  const templateVars = {
+    username: null
+  }
+  res.render("register",templateVars)
+})
+
 function generateRandomString() {
   return Math.random().toString(36).substr(2, 6);
 }
