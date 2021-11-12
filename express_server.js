@@ -123,14 +123,14 @@ app.post("/login", (req, res) => {
   const user = newEmail(email)
   //const username = req.cookies["user"];
 
-  if(!user || user.password !== password) {
+  if(!user || !bcrypt.compareSync(password,user.password)) {
     return res.status(401).send("Invalid Username or Password");
   }
-  else if (user && bcrypt.compareSync(password,user.password)){
+  //else if (user && bcrypt.compareSync(password,user.password)){
     res.cookie('user_id',user.id)
     console.log(req.body)
     res.redirect("/urls");
-  }
+  //}
   //const username = req.body.login
  
 })
