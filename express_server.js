@@ -12,6 +12,20 @@ const urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
+const users = { 
+  "userRandomID": {
+    id: "userRandomID", 
+    email: "user@example.com", 
+    password: "purple-monkey-dinosaur"
+  },
+ "user2RandomID": {
+    id: "user2RandomID", 
+    email: "user2@example.com", 
+    password: "dishwasher-funk"
+  }
+}
+
+
 app.get("/", (req, res) => {
   res.send("Hello!");
 });
@@ -26,19 +40,20 @@ app.get("/hello", (req, res) => {
 
 app.get("/urls", (req, res) => {
   console.log(req.cookies)
-  const username = req.cookies["username"];
-  if(!username) {
-    return res.status(400).send("you are not logged in");
-  }
+  const username = req.cookies["user"];
+  const email = users["username"]
+  
   const templateVars = { 
     urls: urlDatabase ,
-    username
+    username,
+    user: users[username],
+    email
   };
   res.render("urls_index", templateVars);
 });
 
 app.get("/urls/new", (req, res) => {
-  const username = req.cookies["username"];
+  const username = req.cookies["user"];
   if(!username) {
     return res.redirect("/login");
   }
@@ -52,7 +67,7 @@ app.get("/urls/:shortURL", (req, res) => {
   const templateVars = { 
     shortURL: req.params.shortURL,
     longURL:urlDatabase[req.params.shortURL],
-    username: req.cookies["username"]
+    username: req.cookies["user"]
   };
   res.render("urls_show", templateVars);
 });
@@ -89,7 +104,7 @@ app.post("/urls/:shortURL/edit", (req, res) => {
 })
 
 app.get("/login", (req, res) => {
-  const username = req.cookies["username"];
+  const username = req.cookies["user"];
   if(username) {
     return res.redirect("/urls");
   }
@@ -102,13 +117,13 @@ app.get("/login", (req, res) => {
 
 app.post("/login", (req, res) => {
   //const username = req.body.login
-  res.cookie('username',req.body.email)
+  res.cookie('user',req.body.email)
   console.log(req.body)
   res.redirect("/urls");
 })
 
 app.post("/logout", (req, res) => {
-  res.clearCookie('username')
+  res.clearCookie('user')
   res.redirect("/login");
 })
 
@@ -119,8 +134,41 @@ app.get("/register", (req, res) => {
   res.render("register",templateVars)
 })
 
+app.post("/register", (req, res) => {
+  const userEmail = req.body.email;
+  const userPass = req.body.password;
+
+  if(!userEmail || !userPass){
+    res.send("Email or password is missing.")
+  }
+ // if(!emailAvailable(userEmail)){
+  ////  res.send("A user with this email already exists.")
+  //}
+  const userId = generateRandomString();
+  users[userId] = {
+    id:userId,
+    email: userEmail,
+    password: userPass
+    
+  }
+  //const username = req.body.login
+  res.cookie('user_id',userId)
+  console.log(users)
+  res.redirect("/urls");
+})
+
 function generateRandomString() {
   return Math.random().toString(36).substr(2, 6);
+}
+
+//checks if the email address is already used
+function emailAvailable(email) {
+  for (i in users) {
+    if (i[email] === email) {
+      return false;
+    }
+    return true;
+  }
 }
 
 app.listen(PORT, () => {
