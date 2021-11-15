@@ -41,20 +41,21 @@ app.get("/hello", (req, res) => {
 
 app.get("/urls", (req, res) => {
   console.log(req.cookies)
-  const username = req.cookies.email;
-  const email = users["username"]
+  const username = req.cookies.user_id;
+  //const email = users["username"]
   
   const templateVars = { 
     urls: urlDatabase ,
     username,
     user: users[username],
-    email
+   
   };
+  console.log(users[username],username)
   res.render("urls_index", templateVars);
 });
 
 app.get("/urls/new", (req, res) => {
-  const username = req.cookies["user"];
+  const username = req.cookies.user_id;
   if(!username) {
     return res.redirect("/login");
   }
@@ -136,7 +137,8 @@ app.post("/login", (req, res) => {
 })
 
 app.post("/logout", (req, res) => {
-  res.clearCookie('user')
+  res.clearCookie('user_id')
+  res.clearCookie('email')
   res.redirect("/login");
 })
 

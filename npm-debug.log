@@ -7,8 +7,8 @@
 6 silly lifecycle tinyapp@1.0.0~prestart: no script for prestart, continuing
 7 info lifecycle tinyapp@1.0.0~start: tinyapp@1.0.0
 8 verbose lifecycle tinyapp@1.0.0~start: unsafe-perm in lifecycle true
-9 verbose lifecycle tinyapp@1.0.0~start: PATH: /usr/share/npm/bin/node-gyp-bin:/vagrant/tinyapp/node_modules/.bin:/home/vagrant/bin:/home/vagrant/.local/bin:/home/vagrant/.rvm/gems/ruby-2.3.5/bin:/home/vagrant/.rvm/gems/ruby-2.3.5@global/bin:/home/vagrant/.rvm/rubies/ruby-2.3.5/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/home/vagrant/.rvm/bin:/home/vagrant/.rvm/bin
-10 verbose lifecycle tinyapp@1.0.0~start: CWD: /vagrant/tinyapp
+9 verbose lifecycle tinyapp@1.0.0~start: PATH: /usr/share/npm/bin/node-gyp-bin:/vagrant/resubmit/tinyapp/node_modules/.bin:/home/vagrant/bin:/home/vagrant/.local/bin:/home/vagrant/.rvm/gems/ruby-2.3.5/bin:/home/vagrant/.rvm/gems/ruby-2.3.5@global/bin:/home/vagrant/.rvm/rubies/ruby-2.3.5/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/home/vagrant/.rvm/bin:/home/vagrant/.rvm/bin
+10 verbose lifecycle tinyapp@1.0.0~start: CWD: /vagrant/resubmit/tinyapp
 11 silly lifecycle tinyapp@1.0.0~start: Args: [ '-c', 'nodemon -L express_server.js' ]
 12 info lifecycle tinyapp@1.0.0~start: Failed to exec start script
 13 verbose stack Error: tinyapp@1.0.0 start: `nodemon -L express_server.js`
@@ -19,7 +19,7 @@
 13 verbose stack     at maybeClose (internal/child_process.js:821:16)
 13 verbose stack     at Process.ChildProcess._handle.onexit (internal/child_process.js:211:5)
 14 verbose pkgid tinyapp@1.0.0
-15 verbose cwd /vagrant/tinyapp
+15 verbose cwd /vagrant/resubmit/tinyapp
 16 error Linux 4.4.0-87-generic
 17 error argv "/usr/bin/nodejs" "/usr/bin/npm" "start"
 18 error node v4.2.6
