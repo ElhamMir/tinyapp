@@ -42,7 +42,7 @@ app.get("/hello", (req, res) => {
 app.get("/urls", (req, res) => {
   console.log(req.cookies)
   const username = req.cookies.user_id;
-  //const email = users["username"]
+  const email = req.cookies.email
   
   const templateVars = { 
     urls: urlDatabase ,
@@ -66,12 +66,24 @@ app.get("/urls/new", (req, res) => {
 });
 
 app.get("/urls/:shortURL", (req, res) => {
+  const userId = req.cookies.user_id;
+  const shortURL= req.params.shortURL;
+  if(!userId) {
+    console.log("user is invalid")
+    res.status(400).send("User not found")
+    
+  } else {
+    console.log("here",urlDatabase)
+    const userurl = urlDatabase[shortURL] && urlDatabase[shortURL].id === userId
+    if (!userurl) {
+      res.status(400).send("URL does not belong to the user")
+    }
   const templateVars = { 
-    shortURL: req.params.shortURL,
-    longURL:urlDatabase[req.params.shortURL],
-    username: req.cookies["user"]
+    shortURL,
+    longURL:urlDatabase[shortURL],
+    username: req.cookies.user_id
   };
-  res.render("urls_show", templateVars);
+  res.render("urls_show", templateVars);}
 });
 
 app.post("/urls", (req, res) => {
@@ -137,6 +149,8 @@ app.post("/login", (req, res) => {
 })
 
 app.post("/logout", (req, res) => {
+  const email = req.cookies.email
+  
   res.clearCookie('user_id')
   res.clearCookie('email')
   res.redirect("/login");
