@@ -70,7 +70,7 @@ app.get("/urls/:shortURL", (req, res) => {
   const shortURL= req.params.shortURL;
   if(!userId) {
     console.log("user is invalid")
-    res.status(400).send("User not found")
+    res.status(400).send("You do not have permission to visit this page")
     
   } else {
     console.log("here",urlDatabase)
@@ -88,11 +88,13 @@ app.get("/urls/:shortURL", (req, res) => {
 
 app.post("/urls", (req, res) => {
   console.log(req.body);  // Log the POST request body to the console
+ // const email = req.cookies.email 
   let j = generateRandomString();
   urlDatabase[j] = req.body.longURL
   //urlDatabase[j] = req.body
   console.log(req.body,"req")
-  res.send("Ok");         // Respond with 'Ok' (we will replace this)
+  //res.send("The URL has been added succesfully");   
+  res.redirect("/urls");      // Respond with 'Ok' (we will replace this)
 });
 
 
