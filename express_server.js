@@ -9,9 +9,16 @@ app.use(cookieParser())
 app.set("view engine", "ejs")
 const bcrypt = require('bcrypt');
 const urlDatabase = {
-  "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com"
+  b6UTxQ: {
+      longURL: "https://www.tsn.ca",
+      userID: "aJ48lW"
+  },
+  i3BoGr: {
+      longURL: "https://www.google.ca",
+      userID: "aJ48lW"
+  }
 };
+
 
 const users = { 
   "userRandomID": {
@@ -48,6 +55,7 @@ app.get("/urls", (req, res) => {
     urls: urlDatabase ,
     username,
     user: users[username],
+    email
    
   };
   console.log(users[username],username)
@@ -74,13 +82,13 @@ app.get("/urls/:shortURL", (req, res) => {
     
   } else {
     console.log("here",urlDatabase)
-    const userurl = urlDatabase[shortURL] && urlDatabase[shortURL].id === userId
-    if (!userurl) {
-      res.status(400).send("URL does not belong to the user")
-    }
+    const userurl = urlDatabase[shortURL].longURL && urlDatabase[shortURL].userID === userId
+   // if (!userurl) {
+   //   res.status(400).send("URL does not belong to the user")
+    //}
   const templateVars = { 
     shortURL,
-    longURL:urlDatabase[shortURL],
+    longURL:urlDatabase[shortURL].longURL,
     username: req.cookies.user_id
   };
   res.render("urls_show", templateVars);}
@@ -89,8 +97,18 @@ app.get("/urls/:shortURL", (req, res) => {
 app.post("/urls", (req, res) => {
   console.log(req.body);  // Log the POST request body to the console
  // const email = req.cookies.email 
-  let j = generateRandomString();
-  urlDatabase[j] = req.body.longURL
+ const userId = req.cookies.user_id;
+ // const shortURL= req.params.shortURL;
+  if(!userId) {
+    console.log("user is invalid")
+    res.redirect("/login"); 
+    
+  } 
+  let shortURL = generateRandomString();
+  urlDatabase[shortURL] = {
+    longURL: req.body.longURL,
+    userID: userId
+      }
   //urlDatabase[j] = req.body
   console.log(req.body,"req")
   //res.send("The URL has been added succesfully");   
@@ -100,20 +118,21 @@ app.post("/urls", (req, res) => {
 
 
 app.get("/u/:shortURL", (req, res) => {
-  const longURL = urlDatabase[req.params.shortURL]
+  const longURL = urlDatabase[req.params.shortURL].longURL
   res.redirect(longURL);
 });
 
 app.post("/urls/:shortURL/delete", (req, res) => {
   console.log(req.body.shortURL);
-  delete urlDatabase[req.params.shortURL];
+  delete urlDatabase[req.params.shortURL].longURL;
   res.redirect("/urls");
 })
 
 app.post("/urls/:shortURL/edit", (req, res) => {
+  const saved = req.params.shortURL
   // console.log(res);
   // console.log(req)
-  urlDatabase[req.params.shortURL] = req.body.longURL
+  urlDatabase[req.params.shortURL].longURL = req.body.longURL
   console.log(req.body.longURL)
   //urlDatabase[req.params.shortURL] = res.params ;
   res.redirect("/urls");
