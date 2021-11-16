@@ -8,6 +8,9 @@ app.use(express.urlencoded({extended: true}));
 app.use(cookieParser())
 app.set("view engine", "ejs")
 const bcrypt = require('bcrypt');
+
+const {getUserByEmail} = require("./helpers");
+
 const urlDatabase = {
   b6UTxQ: {
       longURL: "https://www.tsn.ca",
@@ -213,17 +216,7 @@ function generateRandomString() {
   return Math.random().toString(36).substr(2, 6);
 }
 
-//checks if the email address is already used
-function getUserByEmail(email,usersDatabase) {
-  const a = Object.values(usersDatabase);
 
-  for(const user of a) {
-    if(user.email === email) {
-      return user;
-    }
-  }
-  return null;
-}
 
 const urlsForUser = function(userId,urlDatabase){
   const urls = { };
