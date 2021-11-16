@@ -52,7 +52,7 @@ app.get("/urls", (req, res) => {
   const email = req.cookies.email
   
   const templateVars = { 
-    urls: urlDatabase ,
+    urls: urlsForUser(username,urlDatabase) ,
     username,
     user: users[username],
     email
@@ -154,7 +154,7 @@ app.post("/login", (req, res) => {
   //const userEmail = req.body.email; 
   const email = req.body.email;
   const password = req.body.password;
-  const user = newEmail(email)
+  const user = getUserByEmail(email,users)
   //const username = req.cookies["user"];
 
   if(!user || !bcrypt.compareSync(password,user.password)) {
@@ -191,7 +191,7 @@ app.post("/register", (req, res) => {
   if(!userEmail || !userPass){
     return res.send("Email or password is missing.")
   }
- if(newEmail(userEmail)){
+ if(getUserByEmail(userEmail,users)){
     return res.status(401).send("A user with this email already exists.")
   }
   const userId = generateRandomString();
@@ -214,8 +214,8 @@ function generateRandomString() {
 }
 
 //checks if the email address is already used
-function newEmail(email) {
-  const a = Object.values(users);
+function getUserByEmail(email,usersDatabase) {
+  const a = Object.values(usersDatabase);
 
   for(const user of a) {
     if(user.email === email) {
@@ -225,6 +225,15 @@ function newEmail(email) {
   return null;
 }
 
+const urlsForUser = function(userId,urlDatabase){
+  const urls = { };
+  for (const shrtUrl in urlDatabase) {
+    if (urlDatabase[shrtUrl].userID === userId) {
+      urls[shrtUrl] = urlDatabase[shrtUrl];
+    }
+  }
+  return urls;
+}
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
