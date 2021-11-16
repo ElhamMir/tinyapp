@@ -2,6 +2,7 @@ const express = require("express");
 const cookieSession = require('cookie-session');
 const bcrypt = require('bcrypt');
 const {getUserByEmail, generateRandomString} = require("./helpers");
+//const e = require("express");
 
 const app = express();
 const PORT = 8080; // default port 8080
@@ -41,6 +42,17 @@ const users = {
   }
 };
 
+//helper function, returns all urls for a specfic user usi ng user id
+const urlsForUser = function(userId,urlDatabase) {
+  const urls = {};
+  for (const shrtUrl in urlDatabase) {
+    if (urlDatabase[shrtUrl].userID === userId) {
+      urls[shrtUrl] = urlDatabase[shrtUrl];
+    }
+  }
+  return urls;
+};
+
 
 app.get("/", (req, res) => {
   res.send("Hello!");
@@ -49,6 +61,7 @@ app.get("/", (req, res) => {
 app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
 });
+
 
 app.get("/hello", (req, res) => {
   res.send("<html><body>Hello <b>World</b></body></html>\n");
@@ -69,6 +82,7 @@ app.get("/urls", (req, res) => {
   res.render("urls_index", templateVars);
 });
 
+//page for making a new url
 app.get("/urls/new", (req, res) => {
   const username = req.session.user_id;
   const email = req.session.email;
@@ -82,6 +96,7 @@ app.get("/urls/new", (req, res) => {
   res.render("urls_new",templateVars);
 });
 
+//link to a short url
 app.get("/urls/:shortURL", (req, res) => {
   const userId = req.session.user_id;
   const shortURL = req.params.shortURL;
@@ -90,7 +105,9 @@ app.get("/urls/:shortURL", (req, res) => {
     console.log("user is invalid");
     res.status(400).send("You do not have permission to visit this page");
     
-  } else if (urlDatabase[shortURL].longURL && urlDatabase[shortURL].userID === userId) {
+  } else if (!urlDatabase[req.params.shortURL]) {
+    res.status(400).send("You do not have permission to visit this page");
+  } else {
     const templateVars = {
       shortURL,
       longURL:urlDatabase[shortURL].longURL,
@@ -98,8 +115,10 @@ app.get("/urls/:shortURL", (req, res) => {
       email
     };
     res.render("urls_show", templateVars);
+    
   }
 });
+
 
 app.post("/urls", (req, res) => {
   const userId = req.session.user_id;
@@ -121,16 +140,20 @@ app.get("/u/:shortURL", (req, res) => {
   res.redirect(longURL);
 });
 
+//deletes the url
 app.post("/urls/:shortURL/delete", (req, res) => {
   delete urlDatabase[req.params.shortURL].longURL;
   res.redirect("/urls");
 });
 
+//edit the short url
 app.post("/urls/:shortURL/edit", (req, res) => {
   urlDatabase[req.params.shortURL].longURL = req.body.longURL;
   res.redirect("/urls");
 });
 
+
+//login
 app.get("/login", (req, res) => {
   const username = req.session["user"];
   const email = req.body.email;
@@ -194,16 +217,6 @@ app.post("/register", (req, res) => {
 });
 
 
-
-const urlsForUser = function(userId,urlDatabase) {
-  const urls = {};
-  for (const shrtUrl in urlDatabase) {
-    if (urlDatabase[shrtUrl].userID === userId) {
-      urls[shrtUrl] = urlDatabase[shrtUrl];
-    }
-  }
-  return urls;
-};
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
